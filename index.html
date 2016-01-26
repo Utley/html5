@@ -1,0 +1,57 @@
+<html>
+<head>
+<style>
+body{
+  margin: 0;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+var obj = function(){
+  this.x = 0;
+  this.y = 0;
+  this.width = 20;
+  this.height = 10;
+  this.vx = 200;
+  this.vy = 200;
+  this.render = function( context ){
+    context.beginPath();
+    context.fillRect( this.x, this.y, this.width, this.height );
+    context.stroke();
+  };
+  this.clear = function( context ){
+    context.beginPath();
+    context.clearRect( 0, 0, canvas.width, canvas.height );
+    context.stroke();
+  };
+};
+var a = new obj();
+var draw = function(){
+  var fps = 50;
+  a.clear( ctx );
+  a.x += a.vx / fps;
+  a.y += a.vy / fps;
+  if( a.x > window.innerWidth || a.x < 0){
+    a.vx *= -1;
+  }
+  if( a.y > window.innerHeight || a.y < 0){
+    a.vy *= -1;
+  }
+  a.render( ctx );
+
+  var fps = 50;  setTimeout(draw, 1/fps*1000);
+};
+
+draw();
+</script>
+</body>
+</html>
