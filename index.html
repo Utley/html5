@@ -12,7 +12,6 @@ body{
 <script>
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -28,30 +27,45 @@ var obj = function(){
     context.fillRect( this.x, this.y, this.width, this.height );
     context.stroke();
   };
-  this.clear = function( context ){
-    context.beginPath();
-    context.clearRect( 0, 0, canvas.width, canvas.height );
-    context.stroke();
+};
+
+var scene = function(){
+  var self = this;
+  this.fps = 50;
+  this.children = [];
+  this.context = ctx;
+  this.addChild = function( obj ){
+    this.children.push( obj );
+  };
+  this.setContext = function( context ){
+    this.context = context;
+  };
+  this.render = function(){
+    for( var i in this.children ){
+      var child = this.children[i];
+      this.context.fillRect( child.x, child.y, child.width, child.height );
+    }
+  };
+  this.clear = function(){
+    self.context.clearRect( 0, 0, canvas.width, canvas.height );
+  };
+  this.tick = function(){
+    self.clear();
+    for( var i in this.children ){
+      var child = this.children[i];
+      child.x += child.vx / this.fps;
+      child.y += child.vy / this.fps;
+      child.vx = (child.x < 0 || child.x > canvas.width) ? -child.vx : child.vx;
+      child.vy = (child.y < 0 || child.y > canvas.height) ? -child.vy : child.vy;
+      child.render( ctx );
+    }
   };
 };
 var a = new obj();
-var draw = function(){
-  var fps = 50;
-  a.clear( ctx );
-  a.x += a.vx / fps;
-  a.y += a.vy / fps;
-  if( a.x > window.innerWidth || a.x < 0){
-    a.vx *= -1;
-  }
-  if( a.y > window.innerHeight || a.y < 0){
-    a.vy *= -1;
-  }
-  a.render( ctx );
+var b = new scene();
+b.addChild(a);
+setInterval( function(){b.tick();}, 1/b.fps * 1000)
 
-  var fps = 50;  setTimeout(draw, 1/fps*1000);
-};
-
-draw();
 </script>
 </body>
 </html>
