@@ -62,10 +62,11 @@ var scene = function(){
       this.diff = this.interval;
     }
     this.past = this.now;
-    for( var i in this.children ){
+    for( var i = 0; i < this.children.length; i++ ){
       var child = this.children[i];
       child.x += child.vx * ( this.diff / this.interval );
       child.y += child.vy * ( this.diff / this.interval );
+      //out of bounds checks
       if( child.x < 0 || child.x > canvas.width ) {
         child.vx *= -1;
         child.x = child.x < 0 ? 0 : canvas.width;
@@ -74,14 +75,24 @@ var scene = function(){
         child.vy *= -1;
         child. y = child.y < 0 ? 0 : canvas.height;
       }
+      for( var j = i + 1; j < this.children.length; j++ ){
+        var child2 = this.children[j];
+        if( (child.x + child.width > child2.x) && (child2.x + child2.width > child.x) ){
+          if( (child.y + child.height > child2.y) && (child2.y + child2.height > child.y) ){
+            console.log('collision!');
+          }
+        }
+      }
       child.render( ctx );
     }
   };
 };
 var a = new obj();
-var b = new scene();
-b.addChild(a);
-setInterval( function(){b.tick();}, b.interval )
+var b = new obj();
+var c = new scene();
+c.addChild(a);
+//c.addChild(b);
+setInterval( function(){c.tick();}, c.interval )
 
 </script>
 </body>
