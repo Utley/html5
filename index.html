@@ -20,8 +20,8 @@ var obj = function(){
   this.y = 0;
   this.width = 20;
   this.height = 10;
-  this.vx = 200;
-  this.vy = 200;
+  this.vx = 5;
+  this.vy = 5;
   this.render = function( context ){
     context.beginPath();
     context.fillRect( this.x, this.y, this.width, this.height );
@@ -30,9 +30,12 @@ var obj = function(){
 };
 
 var scene = function(){
-  var self = this;
   this.fps = 50;
+  this.interval = 1 / this.fps * 1000;
   this.children = [];
+  this.now = 0;
+  this.past = 0;
+  this.diff = 0;
   this.context = ctx;
   this.addChild = function( obj ){
     this.children.push( obj );
@@ -47,14 +50,22 @@ var scene = function(){
     }
   };
   this.clear = function(){
-    self.context.clearRect( 0, 0, canvas.width, canvas.height );
+    this.context.clearRect( 0, 0, canvas.width, canvas.height );
   };
   this.tick = function(){
-    self.clear();
+    this.clear();
+    this.now = new Date().getTime();
+    if( this.past > 0 ) {
+      this.diff = this.now - this.past;
+    }
+    else {
+      this.diff = this.interval;
+    }
+    this.past = this.now;
     for( var i in this.children ){
       var child = this.children[i];
-      child.x += child.vx / this.fps;
-      child.y += child.vy / this.fps;
+      child.x += child.vx * ( this.diff / this.interval );
+      child.y += child.vy * ( this.diff / this.interval );
       child.vx = (child.x < 0 || child.x > canvas.width) ? -child.vx : child.vx;
       child.vy = (child.y < 0 || child.y > canvas.height) ? -child.vy : child.vy;
       child.render( ctx );
@@ -64,7 +75,7 @@ var scene = function(){
 var a = new obj();
 var b = new scene();
 b.addChild(a);
-setInterval( function(){b.tick();}, 1/b.fps * 1000)
+setInterval( function(){b.tick();}, b.interval )
 
 </script>
 </body>
