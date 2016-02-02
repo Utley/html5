@@ -66,8 +66,14 @@ var scene = function(){
       var child = this.children[i];
       child.x += child.vx * ( this.diff / this.interval );
       child.y += child.vy * ( this.diff / this.interval );
-      child.vx = (child.x < 0 || child.x > canvas.width) ? -child.vx : child.vx;
-      child.vy = (child.y < 0 || child.y > canvas.height) ? -child.vy : child.vy;
+      if( child.x < 0 || child.x > canvas.width ) {
+        child.vx *= -1;
+        child.x = child.x < 0 ? 0 : canvas.width;
+      }
+      if( child.y < 0 || child.y > canvas.height ) {
+        child.vy *= -1;
+        child. y = child.y < 0 ? 0 : canvas.height;
+      }
       child.render( ctx );
     }
   };
