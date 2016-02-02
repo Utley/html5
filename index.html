@@ -18,8 +18,8 @@ canvas.height = window.innerHeight;
 var obj = function(){
   this.x = 0;
   this.y = 0;
-  this.width = 20;
-  this.height = 10;
+  this.width = 50;
+  this.height = 50;
   this.vx = 5;
   this.vy = 5;
   this.render = function( context ){
@@ -79,7 +79,22 @@ var scene = function(){
         var child2 = this.children[j];
         if( (child.x + child.width > child2.x) && (child2.x + child2.width > child.x) ){
           if( (child.y + child.height > child2.y) && (child2.y + child2.height > child.y) ){
-            console.log('collision!');
+            child.vx *= -1;
+            child.vy *= -1;
+            child2.vx *= -1;
+            child2.vy *= -1;
+            if( child.x > child2.x ){
+              child.x -= (child2.x - child.x);
+            }
+            else {
+              child2.x -= (child.x - child2.x);
+            }
+            if( child.y > child2.y ){
+              child.y -= (child2.y - child.y);
+            }
+            else {
+              child2.y -= (child.y - child2.y);
+            }
           }
         }
       }
@@ -89,9 +104,19 @@ var scene = function(){
 };
 var a = new obj();
 var b = new obj();
+b.x = 500;
+b.y = 500;
 var c = new scene();
 c.addChild(a);
-//c.addChild(b);
+c.addChild(b);
+for(var i = 0; i < 50; i++ ){
+  var a = new obj();
+  a.x = Math.floor(Math.random() * canvas.width);
+  a.y = Math.floor(Math.random() * canvas.height);
+  a.width = Math.floor(Math.random() * 50) + 10;
+  a.height = Math.floor(Math.random() * 50) + 10;
+  c.addChild(a);
+}
 setInterval( function(){c.tick();}, c.interval )
 
 </script>
