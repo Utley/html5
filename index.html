@@ -84,16 +84,16 @@ var scene = function(){
             child2.vx *= -1;
             child2.vy *= -1;
             if( child.x > child2.x ){
-              child.x -= (child2.x - child.x);
+              child.x += (child2.width - (child.x - child2.x));
             }
             else {
-              child2.x -= (child.x - child2.x);
+              child2.x += (child.width - (child2.x - child.x));
             }
             if( child.y > child2.y ){
-              child.y -= (child2.y - child.y);
+              child.y += (child2.height - (child.y - child2.y));
             }
             else {
-              child2.y -= (child.y - child2.y);
+              child2.y += (child.height - (child2.y - child.y));
             }
           }
         }
@@ -109,12 +109,12 @@ b.y = 500;
 var c = new scene();
 c.addChild(a);
 c.addChild(b);
-for(var i = 0; i < 50; i++ ){
+for(var i = 0; i < 10; i++ ){
   var a = new obj();
   a.x = Math.floor(Math.random() * canvas.width);
   a.y = Math.floor(Math.random() * canvas.height);
-  a.width = Math.floor(Math.random() * 50) + 10;
-  a.height = Math.floor(Math.random() * 50) + 10;
+  a.width = Math.floor(Math.random() * 50) + 50;
+  a.height = Math.floor(Math.random() * 50) + 50;
   c.addChild(a);
 }
 setInterval( function(){c.tick();}, c.interval )
