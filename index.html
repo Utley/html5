@@ -15,6 +15,22 @@ var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+var controller = function(){
+  var mappings = {
+    xIncrement: 'd',
+    xDecrement: 'a',
+    yIncrement: 's',
+    yDecrement: 'w'
+  };
+  document.addEventListener("keypress", function(e){
+    for(var i in mappings){
+      if(mappings[i] == String.fromCharCode(e.charCode)){
+        console.log(mappings[i]);
+      }
+    }
+  });
+};
+
 var obj = function(){
   this.x = 0;
   this.y = 0;
@@ -73,48 +89,46 @@ var scene = function(){
       }
       if( child.y < 0 || child.y > canvas.height ) {
         child.vy *= -1;
-        child. y = child.y < 0 ? 0 : canvas.height;
+        child.y = child.y < 0 ? 0 : canvas.height;
       }
       for( var j = i + 1; j < this.children.length; j++ ){
         var child2 = this.children[j];
-        if( (child.x + child.width > child2.x) && (child2.x + child2.width > child.x) ){
-          if( (child.y + child.height > child2.y) && (child2.y + child2.height > child.y) ){
-            child.vx *= -1;
-            child.vy *= -1;
-            child2.vx *= -1;
-            child2.vy *= -1;
-            if( child.x > child2.x ){
-              child.x += (child2.width - (child.x - child2.x));
-            }
-            else {
-              child2.x += (child.width - (child2.x - child.x));
-            }
-            if( child.y > child2.y ){
-              child.y += (child2.height - (child.y - child2.y));
-            }
-            else {
-              child2.y += (child.height - (child2.y - child.y));
-            }
-          }
+        if( collides( child, child2 ) ){
+          child.vx *= -1;
+          child.vy *= -1;
+          child2.vx *= -1;
+          child2.vy *= -1;
         }
       }
       child.render( ctx );
     }
   };
 };
-var a = new obj();
-var b = new obj();
-b.x = 500;
-b.y = 500;
+
+var collides = function( obj1, obj2 ){
+  if( (obj1.x + obj1.width > obj2.x) && (obj2.x + obj2.width > obj1.x) ){
+    if( (obj1.y + obj1.height > obj2.y) && (obj2.y + obj2.height > obj1.y) ){
+      return true;
+    }
+  }
+  else {
+    return false;
+  }
+};
+
+var fixOffset = function( obj1, obj2 ){
+  if( obj2.x > obj1.x + obj1.width/2 && obj2.x < obj1.x + obj1.width){
+
+  }
+};
+
 var c = new scene();
-c.addChild(a);
-c.addChild(b);
 for(var i = 0; i < 10; i++ ){
   var a = new obj();
   a.x = Math.floor(Math.random() * canvas.width);
   a.y = Math.floor(Math.random() * canvas.height);
-  a.width = Math.floor(Math.random() * 50) + 50;
-  a.height = Math.floor(Math.random() * 50) + 50;
+  a.width = 50//Math.floor(Math.random() * 50) + 50;
+  a.height = 50//Math.floor(Math.random() * 50) + 50;
   c.addChild(a);
 }
 setInterval( function(){c.tick();}, c.interval )
