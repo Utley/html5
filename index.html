@@ -15,12 +15,33 @@ var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+var pressedkeys = [];
+
+document.addEventListener("keydown", function(e){
+  //e.preventDefault();
+  var key = String.fromCharCode(e.keyCode).toLowerCase();
+  if( pressedkeys.indexOf(key) == -1 ){
+    pressedkeys.push(key);
+  }
+  console.log( e.keyCode + " down.");
+});
+
+document.addEventListener("keyup", function(e){
+  var key = String.fromCharCode( e.keyCode ).toLowerCase();
+  while( pressedkeys.indexOf( key ) > -1 ){
+    var index = pressedkeys.indexOf( key );
+    var firsthalf = pressedkeys.splice( 0, index );
+    var secondhalf = pressedkeys.splice( index + 1 );
+    console.log( firsthalf );
+    console.log( secondhalf );
+    pressedkeys = firsthalf.concat(secondhalf);
+  }
+  console.log(e.keyCode + " up.");
+});
+
 var controller = function(){
   var obj = null;
-  this.attachTo = function( newObj ){
-    obj = newObj;
-  };
-  var mappings = {
+  this.mappings = {
     'w' : function(){
       obj.vy -= 10;
     },
@@ -34,13 +55,9 @@ var controller = function(){
       obj.vx += 10;
     }
   };
-  document.addEventListener("keypress", function(e){
-    for(var i in mappings){
-      if(i == String.fromCharCode(e.charCode)){
-        mappings[i]();
-      }
-    }
-  });
+  this.setObject = function( o ){
+    obj = o;
+  }
 };
 
 var obj = function(){
@@ -55,6 +72,9 @@ var obj = function(){
     context.fillRect( this.x, this.y, this.width, this.height );
     context.stroke();
   };
+  this.addController = function( c ){
+    this.controller = c;
+  };
 };
 
 var scene = function(){
@@ -64,6 +84,7 @@ var scene = function(){
   this.now = 0;
   this.past = 0;
   this.diff = 0;
+  this.friction = .75;
   this.context = ctx;
   this.addChild = function( obj ){
     this.children.push( obj );
@@ -92,8 +113,18 @@ var scene = function(){
     this.past = this.now;
     for( var i = 0; i < this.children.length; i++ ){
       var child = this.children[i];
+      if( child.hasOwnProperty('controller') ){
+        for( var j in pressedkeys ){
+          var key = pressedkeys[j];
+          if (child.controller.mappings.hasOwnProperty(key)){
+            child.controller.mappings[key]();
+          }
+        }
+      }
       child.x += child.vx * ( this.diff / this.interval );
       child.y += child.vy * ( this.diff / this.interval );
+      child.vx *= this.friction;
+      child.vy *= this.friction;
       //out of bounds checks
       if( child.x < 0 || child.x > canvas.width ) {
         child.vx *= -1;
@@ -146,10 +177,14 @@ for(var i = 0; i < 10; i++ ){
 }
 */
 var player = new obj();
+var testObj = new obj();
 var keyboard = new controller();
-keyboard.attachTo(player);
+player.addController( keyboard );
+keyboard.setObject(player);
 background.addChild(player);
-
+background.addChild(testObj);
+testObj.x = 500;
+testObj.y = 500;
 setInterval( function(){background.tick();}, background.interval )
 
 </script>
