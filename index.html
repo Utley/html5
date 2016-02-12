@@ -23,7 +23,6 @@ document.addEventListener("keydown", function(e){
   if( pressedkeys.indexOf(key) == -1 ){
     pressedkeys.push(key);
   }
-  console.log( e.keyCode + " down.");
 });
 
 document.addEventListener("keyup", function(e){
@@ -32,11 +31,8 @@ document.addEventListener("keyup", function(e){
     var index = pressedkeys.indexOf( key );
     var firsthalf = pressedkeys.splice( 0, index );
     var secondhalf = pressedkeys.splice( index + 1 );
-    console.log( firsthalf );
-    console.log( secondhalf );
     pressedkeys = firsthalf.concat(secondhalf);
   }
-  console.log(e.keyCode + " up.");
 });
 
 var controller = function(){
@@ -139,8 +135,12 @@ var scene = function(){
         if( collides( child, child2 ) ){
           child.vx *= -1;
           child.vy *= -1;
+          child.x += child.vx;
+          child.y += child.vy;
           child2.vx *= -1;
           child2.vy *= -1;
+          child2.x += child2.vx;
+          child2.y += child2.vy;
         }
       }
       child.render( ctx );
