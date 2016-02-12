@@ -133,14 +133,22 @@ var scene = function(){
       for( var j = i + 1; j < this.children.length; j++ ){
         var child2 = this.children[j];
         if( collides( child, child2 ) ){
+          /*
           child.vx *= -1;
           child.vy *= -1;
+          */
+          child2.vx = child.vx;
+          child2.vy = child.vy;
+          child.vx = 0;
+          child.vy = 0;
+
           child.x += child.vx;
           child.y += child.vy;
-          child2.vx *= -1;
-          child2.vy *= -1;
+          //child2.vx *= -1;
+          //child2.vy *= -1;
           child2.x += child2.vx;
           child2.y += child2.vy;
+          
         }
       }
       child.render( ctx );
