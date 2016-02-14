@@ -28,6 +28,7 @@ document.addEventListener("keydown", function(e){
 document.addEventListener("keyup", function(e){
   var key = String.fromCharCode( e.keyCode ).toLowerCase();
   while( pressedkeys.indexOf( key ) > -1 ){
+    //weird js to remove unpressed keys from array
     var index = pressedkeys.indexOf( key );
     var firsthalf = pressedkeys.splice( 0, index );
     var secondhalf = pressedkeys.splice( index + 1 );
@@ -139,10 +140,6 @@ var scene = function(){
       for( var j = i + 1; j < this.children.length; j++ ){
         var child2 = this.children[j];
         if( collides( child, child2 ) ){
-          /*
-          child.vx *= -1;
-          child.vy *= -1;
-          */
           child2.vx = child.vx;
           child2.vy = child.vy;
           child.vx = 0;
@@ -150,11 +147,8 @@ var scene = function(){
 
           child.x += child.vx;
           child.y += child.vy;
-          //child2.vx *= -1;
-          //child2.vy *= -1;
           child2.x += child2.vx;
           child2.y += child2.vy;
-
         }
       }
       child.render( ctx );
@@ -180,16 +174,6 @@ var fixOffset = function( obj1, obj2 ){
 };
 
 var background = new scene();
-/*
-for(var i = 0; i < 10; i++ ){
-  var a = new obj();
-  a.x = Math.floor(Math.random() * canvas.width);
-  a.y = Math.floor(Math.random() * canvas.height);
-  a.width = 50//Math.floor(Math.random() * 50) + 50;
-  a.height = 50//Math.floor(Math.random() * 50) + 50;
-  c.addChild(a);
-}
-*/
 var player = new obj();
 var testObj = new obj();
 var keyboard = new controller();
