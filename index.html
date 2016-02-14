@@ -80,7 +80,7 @@ var scene = function(){
   this.now = 0;
   this.past = 0;
   this.diff = 0;
-  this.friction = .75;
+  this.friction = 0.75;
   this.context = ctx;
   this.addChild = function( obj ){
     this.children.push( obj );
@@ -109,6 +109,7 @@ var scene = function(){
     this.past = this.now;
     for( var i = 0; i < this.children.length; i++ ){
       var child = this.children[i];
+      //make adjustments based on user input first
       if( child.hasOwnProperty('controller') ){
         for( var j in pressedkeys ){
           var key = pressedkeys[j];
@@ -117,19 +118,24 @@ var scene = function(){
           }
         }
       }
+      // then change according to velocity
+      // multiply by ratio of actual difference to ideal difference to compensate
+      // for slight timing inaccuracies
       child.x += child.vx * ( this.diff / this.interval );
       child.y += child.vy * ( this.diff / this.interval );
       child.vx *= this.friction;
       child.vy *= this.friction;
-      //out of bounds checks
-      if( child.x < 0 || child.x > canvas.width ) {
+
+      // out of bounds checks
+      if( child.x < 0 || (child.x + child.width) > canvas.width ) {
         child.vx *= -1;
-        child.x = child.x < 0 ? 0 : canvas.width;
+        child.x = child.x < 0 ? 0 : (canvas.width - child.width);
       }
-      if( child.y < 0 || child.y > canvas.height ) {
+      if( child.y < 0 || (child.y + child.height) > canvas.height ) {
         child.vy *= -1;
-        child.y = child.y < 0 ? 0 : canvas.height;
+        child.y = child.y < 0 ? 0 : (canvas.height - child.height);
       }
+
       for( var j = i + 1; j < this.children.length; j++ ){
         var child2 = this.children[j];
         if( collides( child, child2 ) ){
@@ -148,7 +154,7 @@ var scene = function(){
           //child2.vy *= -1;
           child2.x += child2.vx;
           child2.y += child2.vy;
-          
+
         }
       }
       child.render( ctx );
