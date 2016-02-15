@@ -167,4 +167,4 @@ background.addChild(player);
 background.addChild(testObj);
 testObj.x = 500;
 testObj.y = 500;
-setInterval( function(){background.tick();}, background.interval )
+setInterval( function(){window.requestAnimationFrame(function(){background.tick()});}, background.interval )
