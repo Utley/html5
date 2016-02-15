@@ -1,5 +1,4 @@
 var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -23,8 +22,6 @@ document.addEventListener("keyup", function(e){
     pressedkeys = firsthalf.concat(secondhalf);
   }
 });
-
-
 
 var collides = function( obj1, obj2 ){
   if( (obj1.x + obj1.width > obj2.x) && (obj2.x + obj2.width > obj1.x) ){
@@ -51,6 +48,7 @@ player.addController( keyboard );
 keyboard.setObject(player);
 background.addChild(player);
 background.addChild(testObj);
+background.setCanvas(canvas);
 testObj.x = 500;
 testObj.y = 500;
 setInterval( function(){window.requestAnimationFrame(function(){background.tick()});}, background.interval )
