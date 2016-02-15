@@ -89,12 +89,6 @@ var scene = function(){
   this.setContext = function( context ){
     this.context = context;
   };
-  this.render = function(){
-    for( var i in this.children ){
-      var child = this.children[i];
-      this.context.fillRect( child.x, child.y, child.width, child.height );
-    }
-  };
   this.clear = function(){
     this.context.clearRect( 0, 0, canvas.width, canvas.height );
   };
@@ -110,6 +104,7 @@ var scene = function(){
     this.past = this.now;
     for( var i = 0; i < this.children.length; i++ ){
       var child = this.children[i];
+
       //make adjustments based on user input first
       if( child.hasOwnProperty('controller') ){
         for( var j in pressedkeys ){
@@ -119,6 +114,7 @@ var scene = function(){
           }
         }
       }
+
       // then change according to velocity
       // multiply by ratio of actual difference to ideal difference to compensate
       // for slight timing inaccuracies
