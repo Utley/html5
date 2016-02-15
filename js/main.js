@@ -52,8 +52,10 @@ var obj = function(){
   this.height = 50;
   this.vx = 5;
   this.vy = 5;
+  this.background = "black";
   this.render = function( context ){
     context.beginPath();
+    context.fillStyle = this.background;
     context.fillRect( this.x, this.y, this.width, this.height );
     context.stroke();
   };
@@ -71,6 +73,7 @@ var scene = function(){
   this.diff = 0;
   this.friction = 0.75;
   this.context = ctx;
+  this.background = "grey";
   this.addChild = function( obj ){
     this.children.push( obj );
   };
@@ -78,7 +81,12 @@ var scene = function(){
     this.context = context;
   };
   this.clear = function(){
-    this.context.clearRect( 0, 0, canvas.width, canvas.height );
+    //this.context.clearRect( 0, 0, canvas.width, canvas.height );
+    this.context.beginPath();
+    this.context.fillStyle = this.background;
+    this.context.fillRect( 0, 0, canvas.width, canvas.height);
+    this.context.stroke();
+
   };
   this.tick = function(){
     this.clear();
