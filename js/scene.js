@@ -5,7 +5,7 @@ var scene = function(){
   this.now = 0;
   this.past = 0;
   this.diff = 0;
-  this.friction = 0.75;
+  this.friction = 0.95;
   this.context = null;
   this.canvas = null;
   this.background = "grey";
@@ -51,6 +51,7 @@ var scene = function(){
       // for slight timing inaccuracies
       child.x += child.vx * ( this.diff / this.interval );
       child.y += child.vy * ( this.diff / this.interval );
+
       child.vx *= this.friction;
       child.vy *= this.friction;
 

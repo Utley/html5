@@ -5,6 +5,8 @@ var obj = function(){
   this.height = 50;
   this.vx = 5;
   this.vy = 5;
+  this.thrust = 4;
+  this.mass = 4;
   this.background = "black";
   this.render = function( context ){
     context.beginPath();
