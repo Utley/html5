@@ -5,22 +5,23 @@ var scene = function(){
   this.now = 0;
   this.past = 0;
   this.diff = 0;
-  this.friction = 0.75;
-  this.context = ctx;
+  this.friction = 0.95;
+  this.context = null;
+  this.canvas = null;
   this.background = "grey";
   this.addChild = function( obj ){
     this.children.push( obj );
   };
-  this.setContext = function( context ){
-    this.context = context;
-  };
+  this.setCanvas = function( canvas ){
+    this.canvas = canvas;
+    this.context= canvas.getContext('2d');
+  }
   this.clear = function(){
     //this.context.clearRect( 0, 0, canvas.width, canvas.height );
     this.context.beginPath();
     this.context.fillStyle = this.background;
     this.context.fillRect( 0, 0, canvas.width, canvas.height);
     this.context.stroke();
-
   };
   this.tick = function(){
     this.clear();
@@ -50,6 +51,7 @@ var scene = function(){
       // for slight timing inaccuracies
       child.x += child.vx * ( this.diff / this.interval );
       child.y += child.vy * ( this.diff / this.interval );
+
       child.vx *= this.friction;
       child.vy *= this.friction;
 
@@ -77,7 +79,7 @@ var scene = function(){
           child2.y += child2.vy;
         }
       }
-      child.render( ctx );
+      child.render( this.context );
     }
   };
 };
