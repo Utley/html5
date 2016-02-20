@@ -1,13 +1,15 @@
 var canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
+var ctx = canvas.getContext('2d');
 var pressedkeys = [];
+var controllerkeys = ['w','a','s','d'];
+var index;
 
 document.addEventListener("keydown", function(e){
   //e.preventDefault();
   var key = String.fromCharCode(e.keyCode).toLowerCase();
-  if( pressedkeys.indexOf(key) == -1 ){
+  if( pressedkeys.indexOf(key) == -1 && controllerkeys.indexOf(key) > -1){
     pressedkeys.push(key);
   }
 });
@@ -23,36 +25,12 @@ document.addEventListener("keyup", function(e){
   }
 });
 
-var collides = function( obj1, obj2 ){
-  if( (obj1.x + obj1.width > obj2.x) && (obj2.x + obj2.width > obj1.x) ){
-    if( (obj1.y + obj1.height > obj2.y) && (obj2.y + obj2.height > obj1.y) ){
-      return true;
-    }
-  }
-  else {
-    return false;
-  }
-};
-
-var fixOffset = function( obj1, obj2 ){
-  if( obj2.x > obj1.x + obj1.width/2 && obj2.x < obj1.x + obj1.width){
-
-  }
-};
-
 var background = new scene();
-var player = new obj();
-var keyboard = new controller();
-player.addController( keyboard );
-keyboard.setObject(player);
 
-socket.on('update', function( data ){
-  console.log(data);
-  console.log(background.children[data.index]);
-  background.children[data.index].x = data.x;
-  background.children[data.index].y = data.y;
+
+socket.on('tick', function( data ){
+  background.children = data;
 });
 
-background.addChild(player);
 background.setCanvas(canvas);
 setInterval( function(){window.requestAnimationFrame(function(){background.tick()});}, background.interval )
