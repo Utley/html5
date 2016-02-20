@@ -12,6 +12,8 @@ app.get('/', function(req, res){
 var obj = function(){
   this.vx = 0;
   this.vy = 0;
+  this.thrust = 3;
+  this.mass = 1;
   this.x = 0;
   this.y = 0;
   this.width = 20;
@@ -24,19 +26,23 @@ var friction = 0.15;
 io.on('connection', function( socket ){
   console.log('user connected');
   children[socket.id] = new obj();
+  var player = children[socket.id];
   socket.on('user input', function(data){
     if(data.keys.indexOf('w') > -1){
-      children[socket.id].vy -= 3;
+      player.vy -= player.thrust / player.mass;
     }
     if(data.keys.indexOf('a') > -1){
-      children[socket.id].vx -= 3;
+      player.vx -= player.thrust / player.mass;
     }
     if(data.keys.indexOf('s') > -1){
-      children[socket.id].vy += 3;
+      player.vy += player.thrust / player.mass;
     }
     if(data.keys.indexOf('d') > -1){
-      children[socket.id].vx += 3;
+      player.vx += player.thrust / player.mass;
     }
+  });
+  socket.on('disconnect', function(){
+    delete children[socket.id];
   });
 });
 
