@@ -35,14 +35,13 @@ var scene = function(){
     this.past = this.now;
     for( var i = 0; i < this.children.length; i++ ){
       var child = this.children[i];
-
+      socket.emit('move', {'index': i, 'x': child.x, 'y': child.y});
       //make adjustments based on user input first
       if( child.hasOwnProperty('controller') ){
         for( var j in pressedkeys ){
           var key = pressedkeys[j];
           if (child.controller.mappings.hasOwnProperty(key)){
             child.controller.mappings[key]();
-            socket.emit('move', {'index': i, 'x': child.x, 'y': child.y});
           }
         }
       }
