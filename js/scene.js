@@ -42,6 +42,7 @@ var scene = function(){
           var key = pressedkeys[j];
           if (child.controller.mappings.hasOwnProperty(key)){
             child.controller.mappings[key]();
+            socket.emit('move', {'x': child.x, 'y': child.y});
           }
         }
       }
