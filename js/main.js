@@ -42,13 +42,17 @@ var fixOffset = function( obj1, obj2 ){
 
 var background = new scene();
 var player = new obj();
-var testObj = new obj();
 var keyboard = new controller();
 player.addController( keyboard );
 keyboard.setObject(player);
+
+socket.on('update', function( data ){
+  console.log(data);
+  console.log(background.children[data.index]);
+  background.children[data.index].x = data.x;
+  background.children[data.index].y = data.y;
+});
+
 background.addChild(player);
-background.addChild(testObj);
 background.setCanvas(canvas);
-testObj.x = 500;
-testObj.y = 500;
 setInterval( function(){window.requestAnimationFrame(function(){background.tick()});}, background.interval )
