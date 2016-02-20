@@ -58,8 +58,9 @@ var tick = function(){
 var fps = 50;
 var interval = 1/fps * 1000;
 setInterval(tick, interval);
-http.listen(3000, function(){
-  console.log('listeneing on 300)');
+var port = 3000;
+http.listen(port, function(){
+  console.log('Listening on port ' + port);
 });
 
 module.exports = app;
