@@ -3,6 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var physics = require('./physics');
+
 app.use( '/js', express.static(__dirname + '/js'));
 
 app.get('/', function(req, res){
@@ -13,11 +15,11 @@ var obj = function(){
   this.vx = 0;
   this.vy = 0;
   this.thrust = 3;
-  this.mass = 1;
+  this.mass = 4;
   this.x = 0;
   this.y = 0;
-  this.width = 20;
-  this.height = 20;
+  this.width = 40;
+  this.height = 40;
   this.background = "black";
 }
 
@@ -47,11 +49,38 @@ io.on('connection', function( socket ){
 });
 
 var tick = function(){
+  var entries = [];
   for(var i in children){
-    children[i].x += children[i].vx;
-    children[i].y += children[i].vy;
-    children[i].vx *= (1-friction);
-    children[i].vy *= (1-friction);
+    entries.push(children[i]);
+  }
+  for(var i in entries){
+    for(var j in entries.reverse()){
+      if( i == j ){
+        break;
+      }
+      var obj1 = entries[i];
+      var obj2 = entries[j];
+      if( physics( obj1, obj2 )){
+        var initvx1 = obj1.vx;
+        var initvy1 = obj1.vy;
+        if( Math.abs(obj1.vx) > Math.abs(obj2.vx) ){
+          obj2.x -= (obj1.x - obj2.x);
+        }
+        else {
+          obj1.x -= (obj2.x - obj1.x);
+        }
+
+        obj1.vx = (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) + (2 * obj2.mass) / (obj1.mass + obj2.mass) * obj2.vx;
+        obj2.vx = (2 * obj1.mass) / (obj1.mass + obj2.mass) * initvx1 - (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) * obj2.vx;
+        obj1.vy = (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) + (2 * obj2.mass) / (obj1.mass + obj2.mass) * obj2.vy;
+        obj2.vy = (2 * obj1.mass) / (obj1.mass + obj2.mass) * initvy1 - (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) * obj2.vy;
+
+      }
+    }
+    entries[i].x += entries[i].vx;
+    entries[i].y += entries[i].vy;
+    entries[i].vx *= (1-friction);
+    entries[i].vy *= (1-friction);
   }
   io.emit('tick', children);
 };
