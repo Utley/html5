@@ -25,6 +25,7 @@ var obj = function(){
 
 var children = {};
 var friction = 0.15;
+
 io.on('connection', function( socket ){
   console.log('user connected');
   children[socket.id] = new obj();
@@ -61,19 +62,28 @@ var tick = function(){
       var obj1 = entries[i];
       var obj2 = entries[j];
       if( physics( obj1, obj2 )){
-        var initvx1 = obj1.vx;
-        var initvy1 = obj1.vy;
-        if( Math.abs(obj1.vx) > Math.abs(obj2.vx) ){
-          obj2.x -= (obj1.x - obj2.x);
-        }
-        else {
-          obj1.x -= (obj2.x - obj1.x);
-        }
+        //do collision stuff here
+        var cx1 = obj1.x + obj1.width / 2;
+        var cx2 = obj2.x + obj2.width / 2;
+        var xdist = cx2 - cx1;
+        var hw1 = obj1.width / 2;
+        var hw2 = obj2.width / 2;
+        var xoverlap = hw1 + hw2 - Math.abs(xdist);
+        xoverlap = xdist < 0 ? xoverlap : -xoverlap;
 
-        obj1.vx = (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) + (2 * obj2.mass) / (obj1.mass + obj2.mass) * obj2.vx;
-        obj2.vx = (2 * obj1.mass) / (obj1.mass + obj2.mass) * initvx1 - (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) * obj2.vx;
-        obj1.vy = (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) + (2 * obj2.mass) / (obj1.mass + obj2.mass) * obj2.vy;
-        obj2.vy = (2 * obj1.mass) / (obj1.mass + obj2.mass) * initvy1 - (obj1.mass - obj2.mass) / (obj1.mass + obj2.mass) * obj2.vy;
+        var cy1 = obj1.y + obj1.height / 2;
+        var cy2 = obj2.y + obj2.height / 2;
+        var ydist = cy2 - cy1;
+        var hh1 = obj1.height / 2;
+        var hh2 = obj2.height / 2;
+        var yoverlap = hh1 + hh2 - Math.abs(ydist);
+        yoverlap = ydist < 0 ? yoverlap : -yoverlap;
+        if( Math.abs(yoverlap) < Math.abs(xoverlap) ){
+          obj1.vy = yoverlap;
+        }
+        else{
+          obj1.vx = xoverlap;
+        }
 
       }
     }
