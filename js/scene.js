@@ -32,10 +32,11 @@ var scene = function(){
     }
   };
 };
-
+var defaultimg = document.getElementById('default');
 var render = function(o){
   ctx.beginPath();
   ctx.fillStyle = o.background;
-  ctx.fillRect( o.x, o.y, o.width, o.height );
+  //ctx.fillRect( o.x, o.y, o.width, o.height );
+  ctx.drawImage( defaultimg, o.x, o.y, o.width, o.height );
   ctx.stroke();
 }
