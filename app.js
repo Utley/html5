@@ -26,6 +26,7 @@ var obj = function(){
 
 var children = {};
 var friction = 0.15;
+var bounce = .75;
 
 io.on('connection', function( socket ){
   console.log('user connected');
@@ -80,12 +81,12 @@ var tick = function(){
         var yoverlap = hh1 + hh2 - Math.abs(ydist);
         yoverlap = ydist < 0 ? yoverlap : -yoverlap;
         if( Math.abs( yoverlap ) < Math.abs( xoverlap ) ){
-          obj1.vy =  yoverlap;
-          obj2.vy = -yoverlap;
+          obj1.vy +=  yoverlap * bounce;
+          obj2.vy += -yoverlap * bounce;
         }
         else{
-          obj1.vx =  xoverlap;
-          obj2.vx = -xoverlap;
+          obj1.vx +=  xoverlap * bounce;
+          obj2.vx += -xoverlap * bounce;
         }
       }
     }
