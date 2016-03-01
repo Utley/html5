@@ -50,18 +50,18 @@ io.on('connection', function( socket ){
 });
 
 var tick = function(){
-  var entries = [];
-  for(var i in children){
-    entries.push(children[i]);
-  }
-  for(var i in entries){
-    for(var j in entries.reverse()){
+  var keys = Object.keys(children);
+
+  for( var i = 0; i < keys.length; i++ ){
+    var key1 = keys[i];
+    for( var j = keys.length - 1; j > -1; j-- ){
       if( i == j ){
         break;
       }
-      var obj1 = entries[i];
-      var obj2 = entries[j];
-      if( physics( obj1, obj2 )){
+      var key2 = keys[j];
+      var obj1 = children[key1];
+      var obj2 = children[key2];
+      if( physics( obj1, obj2 ) ){
         //do collision stuff here
         var cx1 = obj1.x + obj1.width / 2;
         var cx2 = obj2.x + obj2.width / 2;
@@ -78,25 +78,28 @@ var tick = function(){
         var hh2 = obj2.height / 2;
         var yoverlap = hh1 + hh2 - Math.abs(ydist);
         yoverlap = ydist < 0 ? yoverlap : -yoverlap;
-        if( Math.abs(yoverlap) < Math.abs(xoverlap) ){
-          obj1.vy = yoverlap;
+        if( Math.abs( yoverlap ) < Math.abs( xoverlap ) ){
+          obj1.vy =  yoverlap;
+          obj2.vy = -yoverlap;
         }
         else{
-          obj1.vx = xoverlap;
+          obj1.vx =  xoverlap;
+          obj2.vx = -xoverlap;
         }
-
       }
     }
-    entries[i].x += entries[i].vx;
-    entries[i].y += entries[i].vy;
-    entries[i].vx *= (1-friction);
-    entries[i].vy *= (1-friction);
+    children[key1].x  += children[key1].vx;
+    children[key1].y  += children[key1].vy;
+    children[key1].vx *= (1-friction);
+    children[key1].vy *= (1-friction);
   }
   io.emit('tick', children);
 };
+
 var fps = 50;
 var interval = 1/fps * 1000;
 setInterval(tick, interval);
+
 var port = 3000;
 http.listen(port, function(){
   console.log('Listening on port ' + port);
