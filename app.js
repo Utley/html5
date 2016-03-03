@@ -22,6 +22,7 @@ var obj = function(){
   this.width = 40;
   this.height = 40;
   this.background = "black";
+  this.keys = [];
 }
 
 var children = {};
@@ -33,18 +34,7 @@ io.on('connection', function( socket ){
   children[socket.id] = new obj();
   var player = children[socket.id];
   socket.on('user input', function(data){
-    if(data.keys.indexOf('w') > -1){
-      player.vy -= player.thrust / player.mass;
-    }
-    if(data.keys.indexOf('a') > -1){
-      player.vx -= player.thrust / player.mass;
-    }
-    if(data.keys.indexOf('s') > -1){
-      player.vy += player.thrust / player.mass;
-    }
-    if(data.keys.indexOf('d') > -1){
-      player.vx += player.thrust / player.mass;
-    }
+    player.keys = data.keys;
   });
   socket.on('disconnect', function(){
     console.log('user disconnected (id: ' + socket.id + ')');
@@ -57,12 +47,25 @@ var tick = function(){
 
   for( var i = 0; i < keys.length; i++ ){
     var key1 = keys[i];
+    var obj1 = children[key1];
+    var acceleration = obj1.thrust / obj1.mass;
+    if(obj1.keys.indexOf('w') > -1){
+      obj1.vy -= acceleration;
+    }
+    if(obj1.keys.indexOf('a') > -1){
+      obj1.vx -= acceleration;
+    }
+    if(obj1.keys.indexOf('s') > -1){
+      obj1.vy += acceleration;
+    }
+    if(obj1.keys.indexOf('d') > -1){
+      obj1.vx += acceleration;
+    }
     for( var j = keys.length - 1; j > -1; j-- ){
       if( i == j ){
         break;
       }
       var key2 = keys[j];
-      var obj1 = children[key1];
       var obj2 = children[key2];
       if( physics( obj1, obj2 ) ){
         //do collision stuff here
