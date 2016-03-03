@@ -29,7 +29,7 @@ var friction = 0.15;
 var bounce = .75;
 
 io.on('connection', function( socket ){
-  console.log('user connected');
+  console.log('user connected (id: ' + socket.id + ')');
   children[socket.id] = new obj();
   var player = children[socket.id];
   socket.on('user input', function(data){
@@ -47,6 +47,7 @@ io.on('connection', function( socket ){
     }
   });
   socket.on('disconnect', function(){
+    console.log('user disconnected (id: ' + socket.id + ')');
     delete children[socket.id];
   });
 });
