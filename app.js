@@ -28,6 +28,8 @@ var obj = function(){
 var children = {};
 var friction = 0.15;
 var bounce = .75;
+var width = 1024;
+var height = 1024;
 
 io.on('connection', function( socket ){
   console.log('user connected (id: ' + socket.id + ')');
@@ -66,6 +68,12 @@ var tick = function(){
     if(obj1.keys.indexOf('d') > -1){
       obj1.vx += acceleration;
     }
+    if( obj1.x < 0 || obj1.x + obj1.width > width ){
+      obj1.vx *= -1;
+    }
+    if( obj1.y < 0 || obj1.y + obj1.height > height ){
+      obj1.vy *= -1;
+    }
     for( var j = keys.length - 1; j > -1; j-- ){
       if( i == j ){
         break;
@@ -76,7 +84,7 @@ var tick = function(){
         //do collision stuff here
         var cx1 = obj1.x + obj1.width / 2;
         var cx2 = obj2.x + obj2.width / 2;
-        var xdist = cx2 - cx1;
+        var xdist = cx2 - cx1; //distance between centers
         var hw1 = obj1.width / 2;
         var hw2 = obj2.width / 2;
         var xoverlap = hw1 + hw2 - Math.abs(xdist);
