@@ -7,7 +7,6 @@ var controllerkeys = ['w','a','s','d'];
 var index;
 
 document.addEventListener("keydown", function(e){
-  //e.preventDefault();
   var key = String.fromCharCode(e.keyCode).toLowerCase();
   if( pressedkeys.indexOf(key) == -1 && controllerkeys.indexOf(key) > -1){
     pressedkeys.push(key);

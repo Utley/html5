@@ -17,7 +17,6 @@ var scene = function(){
     this.context= canvas.getContext('2d');
   }
   this.clear = function(){
-    //this.context.clearRect( 0, 0, canvas.width, canvas.height );
     this.context.beginPath();
     this.context.fillStyle = this.background;
     this.context.fillRect( 0, 0, canvas.width, canvas.height);
@@ -36,7 +35,6 @@ var defaultimg = document.getElementById('default');
 var render = function(o){
   ctx.beginPath();
   ctx.fillStyle = o.background;
-  //ctx.fillRect( o.x, o.y, o.width, o.height );
   ctx.drawImage( defaultimg, o.x, o.y, o.width, o.height );
   ctx.stroke();
 }
