@@ -9,6 +9,8 @@ var scene = function(){
   this.context = null;
   this.canvas = null;
   this.background = "grey";
+  this.width = 1024;
+  this.height = 1024;
   this.addChild = function( obj ){
     this.children.push( obj );
   };
@@ -28,8 +30,6 @@ var scene = function(){
     for( var i in this.children ){
       var child = this.children[i];
       var me = this.children['/#' + socket.id];
-      console.log(socket.id);
-      console.log(me);
       var myx = me.x;
       var myy = me.y;
       var renderx = -(myx - child.x) + this.canvas.width / 2;
@@ -41,8 +41,25 @@ var scene = function(){
         "height": child.height
       }
       render( renderobj );
+      this.drawSurroundings();
     }
   };
+  this.drawSurroundings = function(o){
+    ctx.beginPath();
+    var me = this.children['/#' + socket.id];
+    var myx = me.x;
+    var myy = me.y;
+    var lx = (this.canvas.width /  2) - myx;
+    var ty = (this.canvas.height / 2) - myy;
+    var by = this.height - (myy) + this.canvas.height / 2;
+    var rx = this.width -  (myx) + this.canvas.width  / 2;
+    ctx.moveTo( lx, ty );
+    ctx.lineTo( lx, by );
+    ctx.lineTo( rx, by );
+    ctx.lineTo( rx, ty );
+    ctx.lineTo( lx, ty );
+    ctx.stroke();
+  }
 };
 var defaultimg = document.getElementById('default');
 var render = function(o){
