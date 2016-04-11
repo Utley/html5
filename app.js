@@ -38,11 +38,6 @@ io.on('connection', function( socket ){
   socket.on('user input', function(data){
     player.keys = data.keys;
   });
-  socket.on('change settings', function(data){
-    friction = data.friction;
-    bounce = data.bounce;
-    io.emit('update settings', data);
-  });
   socket.on('disconnect', function(){
     console.log('user disconnected (id: ' + socket.id + ')');
     delete children[socket.id];

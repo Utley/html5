@@ -9,14 +9,6 @@ body{
 <body>
 <img src="img/testicon.png" id="default" style="display:none;" />
 <canvas id="canvas"></canvas>
-<div style="position: fixed; width:100%; bottom: 0px; border-top: 2px solid black;">
-friction:
-<input type="text" id="friction" />
-<input type="submit" value="change" id="s1"/>
-bounce:
-<input type="text" id="bounce" />
-<input type="submit" value="change" id="s2"/>
-</div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
 var socket = io();
@@ -24,29 +16,5 @@ var socket = io();
 <script src="js/obj.js"></script>
 <script src="js/scene.js"></script>
 <script src="js/main.js"></script>
-<script>
-var button1 = document.getElementById('s1');
-var button2 = document.getElementById('s2');
-var text1   = document.getElementById('friction');
-var text2   = document.getElementById('bounce');
-button1.addEventListener('click', function( e ){
-  var info = {};
-
-  info.friction = text1.value;
-  info.bounce   = text2.value;
-  socket.emit('change settings', info);
-});
-button2.addEventListener('click', function( e ){
-  var info = {};
-
-  info.friction = text1.value;
-  info.bounce   = text2.value;
-  socket.emit('change settings', info);
-});
-socket.on('update settings', function(data){
-  text1.value = data.friction;
-  text2.value = data.bounce;
-});
-</script>
 </body>
 </html>
