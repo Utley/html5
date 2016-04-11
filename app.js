@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
+var readline = require('readline');
 var physics = require('./physics');
 
 app.use( '/js', express.static(__dirname + '/js'));
@@ -124,4 +124,33 @@ http.listen(port, function(){
   console.log('Listening on port ' + port);
 });
 
+rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+var getInput = function(){
+  rl.question('>', (answer) => {
+    answer = answer.trim();
+    var command = answer.substring( 0, answer.indexOf(' '));
+    var arg = answer.substring( answer.indexOf(' '));
+    if( command == 'kick' ){
+      if( arg in children ){
+        delete children[arg];
+        console.log('kicked ' + arg);
+      }
+      else {
+        console.log('could not find user ' + arg);
+      }
+    }
+    if( command == 'list' ){
+      for( var i in children ){
+        console.log(i);
+      }
+    }
+
+    getInput();
+  });
+}
+getInput();
 module.exports = app;
