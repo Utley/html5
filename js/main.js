@@ -48,3 +48,4 @@ socket.on('tick', function( data ){
 
 background.setCanvas(canvas);
 setInterval( function(){window.requestAnimationFrame(function(){background.tick()});}, background.interval )
+setInterval( sendUserInput, 20 );

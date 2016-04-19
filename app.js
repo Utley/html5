@@ -119,8 +119,8 @@ var tick = function(){
   io.emit('tick', children);
 };
 
-var fps = 50;
-var interval = 1/fps * 1000;
+var ticksPerSecond = 50;
+var interval = 1/ticksPerSecond * 1000;
 setInterval(tick, interval);
 
 var port = 3000;
@@ -152,7 +152,6 @@ var getInput = function(){
         console.log(i);
       }
     }
-
     getInput();
   });
 }
