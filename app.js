@@ -51,16 +51,16 @@ var tick = function(){
     var key1 = keys[i];
     var obj1 = children[key1];
     var acceleration = obj1.thrust / obj1.mass;
-    if(obj1.keys.indexOf('w') > -1){
+    if(obj1.keys.indexOf('up') > -1){
       obj1.vy -= acceleration;
     }
-    if(obj1.keys.indexOf('a') > -1){
+    if(obj1.keys.indexOf('left') > -1){
       obj1.vx -= acceleration;
     }
-    if(obj1.keys.indexOf('s') > -1){
+    if(obj1.keys.indexOf('down') > -1){
       obj1.vy += acceleration;
     }
-    if(obj1.keys.indexOf('d') > -1){
+    if(obj1.keys.indexOf('right') > -1){
       obj1.vx += acceleration;
     }
     if( obj1.x < 0 || obj1.x + obj1.width > width ){

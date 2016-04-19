@@ -3,12 +3,27 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 var ctx = canvas.getContext('2d');
 var pressedkeys = [];
-var controllerkeys = ['w','a','s','d'];
+var controls = {
+  'up': 'w',
+  'right': 'd',
+  'down': 's',
+  'left': 'a'
+}
 var index;
+
+var sendUserInput = function(){
+  var datagram = [];
+  for( var i in controls ){
+    if( pressedkeys.indexOf(controls[i]) > -1 ){
+      datagram.push(i);
+    }
+  }
+  socket.emit('user input', {'keys': datagram});
+};
 
 document.addEventListener("keydown", function(e){
   var key = String.fromCharCode(e.keyCode).toLowerCase();
-  if( pressedkeys.indexOf(key) == -1 && controllerkeys.indexOf(key) > -1){
+  if( pressedkeys.indexOf(key) == -1 ){
     pressedkeys.push(key);
   }
 });

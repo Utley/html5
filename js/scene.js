@@ -25,7 +25,7 @@ var scene = function(){
     this.context.stroke();
   };
   this.tick = function(){
-    socket.emit('user input', {'index': index, 'keys': pressedkeys});
+    sendUserInput();
     this.clear();
     for( var i in this.children ){
       var child = this.children[i];
