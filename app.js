@@ -8,6 +8,15 @@ var physics = require('./physics');
 app.use( '/js', express.static(__dirname + '/js'));
 app.use( '/img', express.static(__dirname + '/img'));
 
+app.get('/users', function(req, res){
+  var str = '';
+  for(var i in children){
+    str += i;
+    str += '<br>';
+  }
+  res.send(str);
+});
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
