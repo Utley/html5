@@ -28,6 +28,7 @@ var obj = function(){
   this.mass = 4;
   this.x = 0;
   this.y = 0;
+  this.points = [[0,40],[40,40],[40,0],[0,0]];
   this.width = 40;
   this.height = 40;
   this.background = "black";
@@ -59,6 +60,8 @@ var tick = function(){
   for( var i = 0; i < keys.length; i++ ){
     var key1 = keys[i];
     var obj1 = children[key1];
+
+    //take user input into account first
     var acceleration = obj1.thrust / obj1.mass;
     if(obj1.keys.indexOf('up') > -1){
       obj1.vy -= acceleration;
@@ -72,23 +75,37 @@ var tick = function(){
     if(obj1.keys.indexOf('right') > -1){
       obj1.vx += acceleration;
     }
+    for( var i in obj1.points ){
+      var x = obj1.points[0];
+      var y = obj1.points[1];
+      if( x < 0 || x > width ){
+
+      }
+      if( y < 0 || y > height ){
+
+      }
+    }
     if( obj1.x < 0 || obj1.x + obj1.width > width ){
       obj1.vx *= -1;
     }
     if( obj1.y < 0 || obj1.y + obj1.height > height ){
       obj1.vy *= -1;
     }
+    //compare i to other keys
     for( var j = keys.length - 1; j > -1; j-- ){
       if( i == j ){
         break;
       }
       var key2 = keys[j];
       var obj2 = children[key2];
-      if( physics( obj1, obj2 ) ){
-        //do collision stuff here
+
+      if( physics.trueCollides( obj1, obj2 ) ){
+        console.log("colliding!");
+        //calculate x and y overlap
         var cx1 = obj1.x + obj1.width / 2;
         var cx2 = obj2.x + obj2.width / 2;
-        var xdist = cx2 - cx1; //distance between centers
+        //find the distance between the centers
+        var xdist = cx2 - cx1;
         var hw1 = obj1.width / 2;
         var hw2 = obj2.width / 2;
         var xoverlap = hw1 + hw2 - Math.abs(xdist);
@@ -101,6 +118,8 @@ var tick = function(){
         var hh2 = obj2.height / 2;
         var yoverlap = hh1 + hh2 - Math.abs(ydist);
         yoverlap = ydist < 0 ? yoverlap : -yoverlap;
+
+        //use the bigger overlap to determine the resulting direction of both objects
         if( Math.abs( yoverlap ) < Math.abs( xoverlap ) ){
           obj1.vy +=  yoverlap * bounce;
           obj2.vy += -yoverlap * bounce;
@@ -111,8 +130,13 @@ var tick = function(){
         }
       }
     }
+
     children[key1].x  += children[key1].vx;
     children[key1].y  += children[key1].vy;
+    for( var i in children[key1].points ){
+      children[key1].points[i][0] += children[key1].vx;
+      children[key1].points[i][1] += children[key1].vy;
+    }
     children[key1].vx *= (1-friction);
     children[key1].vy *= (1-friction);
   }
@@ -128,32 +152,4 @@ http.listen(port, function(){
   console.log('Listening on port ' + port);
 });
 
-rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-var getInput = function(){
-  rl.question('>', (answer) => {
-    answer = answer.trim();
-    var command = answer.substring( 0, answer.indexOf(' '));
-    var arg = answer.substring( answer.indexOf(' '));
-    if( command == 'kick' ){
-      if( arg in children ){
-        delete children[arg];
-        console.log('kicked ' + arg);
-      }
-      else {
-        console.log('could not find user ' + arg);
-      }
-    }
-    if( command == 'list' ){
-      for( var i in children ){
-        console.log(i);
-      }
-    }
-    getInput();
-  });
-}
-getInput();
 module.exports = app;
