@@ -36,12 +36,14 @@ var obj = function(){
 }
 
 var updateLocation = function(){
-  this.x += this.vx;
-  this.y += this.vy;
+  for(var i in this.points){
+    this.points[i][0] += this.vx;
+    this.points[i][1] += this.vy;
+  }
 }
 var children = {};
 var friction = 0.15;
-var bounce = .75;
+var bounce = 0.75;
 var width = 1024;
 var height = 1024;
 
@@ -64,7 +66,7 @@ var tick = function(){
   for( var i = 0; i < keys.length; i++ ){
     var key1 = keys[i];
     var obj1 = children[key1];
-
+    console.log(obj1.points);
     //take user input into account first
     var acceleration = obj1.thrust / obj1.mass;
     if(obj1.keys.indexOf('up') > -1){
@@ -127,13 +129,7 @@ var tick = function(){
 
     children[key1].x  += children[key1].vx;
     children[key1].y  += children[key1].vy;
-    for( var i in children[key1].points ){
-      /*
-      children[key1].points[i][0] += children[key1].vx;
-      children[key1].points[i][1] += children[key1].vy;
-      */
-      updateLocation.apply(children[key1]);
-    }
+    updateLocation.apply(children[key1]);
 
     children[key1].vx *= (1-friction);
     children[key1].vy *= (1-friction);

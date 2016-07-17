@@ -12,7 +12,6 @@ var collides = function( obj1, obj2 ){
 }
 
 var trueCollides = function( obj1, obj2 ){
-
   //for each line in obj1, find the perpendicular
   for ( var i in obj1.points ){
     //get the next point
