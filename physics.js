@@ -15,14 +15,22 @@ var trueCollides = function( obj1, obj2 ){
   //for each line in obj1, find the perpendicular
   for ( var i in obj1.points ){
     //get the next point
-    var j = obj1.points[i + 1] || obj1.points[0];
-    i = obj1.points[i];
-    var deltaY = j[1] - i[1];
-    var deltaX = j[0] - i[0];
+    var p1 = obj1.points[i + 1] || obj1.points[0];
+    var p2 = obj1.points[i];
+    console.log("p1 : " + p1);
+    console.log("p2 : " + p2);
+    console.log("obj.points: " + obj1.points);
+    var deltaY = p2[1] - p1[1];
+    console.log("delta y: " + deltaY);
+    var deltaX = p2[0] - p1[0];
+    console.log("delta x: " + deltaX);
     var perpendicular = [-deltaY, deltaX];
     var perpMagnitude = Math.sqrt(deltaY * deltaY + deltaX * deltaX);
+    console.log("perpendicular magnitude: " + perpMagnitude);
     perpendicular[0] = -deltaY / perpMagnitude;
     perpendicular[1] = deltaX  / perpMagnitude;
+    console.log(perpendicular[0]);
+    console.log(perpendicular[1]);
     //project each of obj1's points onto the perpendicular
     //by finding the dot product
     var min1 = Infinity;

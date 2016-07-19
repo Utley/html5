@@ -36,6 +36,7 @@ var obj = function(){
 }
 
 var updateLocation = function(){
+  console.log("points in updatelocation function: " + this.points);
   for(var i in this.points){
     this.points[i][0] += this.vx;
     this.points[i][1] += this.vy;
@@ -127,10 +128,14 @@ var tick = function(){
       }
     }
 
-    children[key1].x  += children[key1].vx;
-    children[key1].y  += children[key1].vy;
-    updateLocation.apply(children[key1]);
-
+    children[key1].x += children[key1].vx;
+    children[key1].y += children[key1].vy;
+    //updateLocation.apply(children[key1]);
+    for(var i in children[key1].points){
+      children[key1].points[i][0] += children[key1].vx;
+      children[key1].points[i][1] += children[key1].vy;
+    }
+    console.log(children[key1]);
     children[key1].vx *= (1-friction);
     children[key1].vy *= (1-friction);
   }
