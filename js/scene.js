@@ -28,6 +28,8 @@ var scene = function(){
     this.clear();
     for( var i in this.children ){
       var child = this.children[i];
+      console.log(child);
+      console.log(this.children);
       var me = this.children['/#' + socket.id];
       var myx = me.x;
       var myy = me.y;
