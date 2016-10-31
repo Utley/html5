@@ -27,7 +27,6 @@ var obj = function(){
 }
 
 var updateLocation = function(){
-  console.log("points in updatelocation function: " + this.points);
   for(var i in this.points){
     this.points[i][0] += this.vx;
     this.points[i][1] += this.vy;
@@ -40,14 +39,12 @@ var width = 1024;
 var height = 1024;
 
 io.on('connection', function( socket ){
-  console.log('user connected (id: ' + socket.id + ')');
   children[socket.id] = new obj();
   var player = children[socket.id];
   socket.on('user input', function(data){
     player.keys = data.keys;
   });
   socket.on('disconnect', function(){
-    console.log('user disconnected (id: ' + socket.id + ')');
     delete children[socket.id];
   });
 });
@@ -58,7 +55,6 @@ var tick = function(){
   for( var i = 0; i < keys.length; i++ ){
     var key1 = keys[i];
     var obj1 = children[key1];
-    console.log(obj1.points);
     //take user input into account first
     var acceleration = obj1.thrust / obj1.mass;
     if(obj1.keys.indexOf('up') > -1){
@@ -89,21 +85,23 @@ var tick = function(){
 
       if( physics.trueCollides( obj1, obj2 ) ){
         console.log("colliding!");
+
         //calculate x and y overlap
-        var cx1 = obj1.x + obj1.width / 2;
-        var cx2 = obj2.x + obj2.width / 2;
+        var center_x1 = obj1.x + obj1.width / 2;
+        var center_x2 = obj2.x + obj2.width / 2;
+
         //find the distance between the centers
-        var xdist = cx2 - cx1;
-        var hw1 = obj1.width / 2;
-        var hw2 = obj2.width / 2;
-        var xoverlap = hw1 + hw2 - Math.abs(xdist);
+        var xdist = center_x2 - center_x1;
+        var half_width1 = obj1.width / 2;
+        var half_width2 = obj2.width / 2;
+        var xoverlap = half_width1 + half_width2 - Math.abs(xdist);
         xoverlap = xdist < 0 ? xoverlap : -xoverlap;
 
-        var cy1 = obj1.y + obj1.height / 2;
-        var cy2 = obj2.y + obj2.height / 2;
+        var center_y1 = obj1.y + obj1.height / 2;
+        var center_y2 = obj2.y + obj2.height / 2;
         var ydist = cy2 - cy1;
-        var hh1 = obj1.height / 2;
-        var hh2 = obj2.height / 2;
+        var half_height1 = obj1.height / 2;
+        var half_height2 = obj2.height / 2;
         var yoverlap = hh1 + hh2 - Math.abs(ydist);
         yoverlap = ydist < 0 ? yoverlap : -yoverlap;
 
@@ -121,12 +119,10 @@ var tick = function(){
 
     children[key1].x += children[key1].vx;
     children[key1].y += children[key1].vy;
-    //updateLocation.apply(children[key1]);
     for(var i in children[key1].points){
       children[key1].points[i][0] += children[key1].vx;
       children[key1].points[i][1] += children[key1].vy;
     }
-    console.log(children[key1]);
     children[key1].vx *= (1-friction);
     children[key1].vy *= (1-friction);
   }
