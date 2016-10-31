@@ -91,7 +91,8 @@ var tick = function(){
         var xdist = center_x2 - center_x1;
         var half_width1 = obj1.width / 2;
         var half_width2 = obj2.width / 2;
-        var xoverlap = half_width1 + half_width2 - Math.abs(xdist);
+        //var xoverlap = half_width1 + half_width2 - Math.abs(xdist);
+	var xoverlap = Math.abs(xdist) - (half_width1 + half_width2);
         xoverlap = xdist < 0 ? xoverlap : -xoverlap;
 
         var center_y1 = obj1.y + obj1.height / 2;
@@ -99,7 +100,8 @@ var tick = function(){
         var ydist = center_y2 - center_y1;
         var half_height1 = obj1.height / 2;
         var half_height2 = obj2.height / 2;
-        var yoverlap = half_height1 + half_height2 - Math.abs(ydist);
+        //var yoverlap = half_height1 + half_height2 - Math.abs(ydist);
+	var yoverlap = Math.abs(ydist) - (half_height1 + half_height2);
         yoverlap = ydist < 0 ? yoverlap : -yoverlap;
 
         //use the bigger overlap to determine the resulting direction of both objects
