@@ -76,10 +76,8 @@ var tick = function(){
       obj1.vy *= -1;
     }
     //compare i to other keys
-    for( var j = keys.length - 1; j > -1; j-- ){
-      if( i == j ){
-        break;
-      }
+    // for( var j = keys.length - 1; j > -1; j-- ){
+    for(var j=i+1;j<keys.length;j++){
       var key2 = keys[j];
       var obj2 = children[key2];
 
@@ -87,10 +85,9 @@ var tick = function(){
         console.log("colliding!");
 
         //calculate x and y overlap
+        //then find the distance between the centers
         var center_x1 = obj1.x + obj1.width / 2;
         var center_x2 = obj2.x + obj2.width / 2;
-
-        //find the distance between the centers
         var xdist = center_x2 - center_x1;
         var half_width1 = obj1.width / 2;
         var half_width2 = obj2.width / 2;
@@ -99,10 +96,10 @@ var tick = function(){
 
         var center_y1 = obj1.y + obj1.height / 2;
         var center_y2 = obj2.y + obj2.height / 2;
-        var ydist = cy2 - cy1;
+        var ydist = center_y2 - center_y1;
         var half_height1 = obj1.height / 2;
         var half_height2 = obj2.height / 2;
-        var yoverlap = hh1 + hh2 - Math.abs(ydist);
+        var yoverlap = half_height1 + half_height2 - Math.abs(ydist);
         yoverlap = ydist < 0 ? yoverlap : -yoverlap;
 
         //use the bigger overlap to determine the resulting direction of both objects
@@ -117,19 +114,19 @@ var tick = function(){
       }
     }
 
-    children[key1].x += children[key1].vx;
-    children[key1].y += children[key1].vy;
-    for(var i in children[key1].points){
-      children[key1].points[i][0] += children[key1].vx;
-      children[key1].points[i][1] += children[key1].vy;
+    obj1.x += obj1.vx;
+    obj1.y += obj1.vy;
+    for(var i in obj1.points){
+      obj1.points[i][0] += obj1.vx;
+      obj1.points[i][1] += obj1.vy;
     }
-    children[key1].vx *= (1-friction);
-    children[key1].vy *= (1-friction);
+    obj1.vx *= (1-friction);
+    obj1.vy *= (1-friction);
   }
   io.emit('tick', children);
 };
 
-var ticksPerSecond = 50;
+var ticksPerSecond = 30;
 var interval = 1/ticksPerSecond * 1000;
 setInterval(tick, interval);
 
